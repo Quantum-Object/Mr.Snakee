@@ -24,6 +24,7 @@ class Food{
     Food(){
         pos=randompos();
         Image img=LoadImage("/Users/quantumobject/Desktop/food.png");
+        ImageResize(&img, cell, cell);  
         tx=LoadTextureFromImage(img);
     }
 
@@ -76,6 +77,7 @@ class Snake{
     }
 
 
+
 };
 
 double last=0;
@@ -90,13 +92,21 @@ bool updateNow(double t){
 
 int main()
 {
+
+
     int score=0;
+    
+
+
 
     InitWindow(cell*cnt, cell*cnt, "HSSSSS");
     SetTargetFPS(60);
     Food food= Food();
     Snake s=Snake();
-
+    InitAudioDevice();
+    Sound eat=LoadSound("/Users/quantumobject/Desktop/confirmation_002.ogg");
+ Sound wall=LoadSound("/Users/quantumobject/Desktop/error_005.ogg");
+ bool v=true;
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(color4);
@@ -115,17 +125,31 @@ int main()
             s.dir={-1,0};
         if (Vector2Equals(s.snake[0],food.pos))
             {
+                PlaySound(eat);
                 score++;
                 food=Food();
                 s.snake.push_back(Vector2Add(s.snake[0],s.dir));
             }
         DrawText(TextFormat("Score: %04i",score),cell*(cnt-10),0,40,color3);
         bool c=s.collision();
+        
+        if (c && v){
+            PlaySound(wall);
+            v=false ;
+        }
         if (c)
             {
+                
                 s.dir={0,0};
-                DrawText("GG try again??",cell*4,cell*8,70,color3);
+                DrawText("GG, try again??",cell*4,cell*8,70,color3);
+                DrawText(" press space to restart",cell*5,cell*11,30,color1);
             }
+        if (IsKeyPressed(KEY_SPACE)){
+            c=false;
+            s=Snake();
+            score=0;
+            v=true;
+        }
         EndDrawing();
     }
     
