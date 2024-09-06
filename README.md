@@ -26,4 +26,4 @@ A classic Snake game implemented in C++ using the Raylib library. Navigate the s
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/snake-game.git
-   cd snake-game
+   cd snake-game# Game-of-Life
